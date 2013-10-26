@@ -1,0 +1,11 @@
+{
+  "currentIP": "123.45.67.89",
+  "domains": [
+    {
+      "domain": "example.com",
+      "record": "1234",
+      "token": "asdfasfd"
+    }
+  ],
+  "lastLogClean": 1382755933249
+}
