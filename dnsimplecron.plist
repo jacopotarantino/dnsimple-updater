@@ -9,15 +9,20 @@
     <true/>
 
     <key>OnDemand</key>
-    <false/>
+    <true/>
 
     <key>Program</key>
-    <string>/usr/local/bin/coffee</string>
+    <string>/usr/local/bin/node</string>
 
     <key>ProgramArguments</key>
     <array>
-      <string>/usr/local/bin/dnsimple-updater/app.coffee</string>
+      <string>/usr/local/bin/dnsimple-updater/app.js</string>
     </array>
+
+    <key>StandardOutPath</key>
+    <string>/usr/local/bin/dnsimple-updater/log.txt</string>
+    <key>StandardErrorPath</key>
+    <string>/usr/local/bin/dnsimple-updater/log.txt</string>
 
     <key>ServiceDescription</key>
     <string>Updates DNSimple IP address in case it's changed every hour.</string>

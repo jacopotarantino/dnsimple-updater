@@ -1,13 +1,12 @@
 request = require 'request'
 fs = require 'fs'
-config = JSON.parse fs.readFileSync('config.json', encoding: 'utf8')
+config = JSON.parse fs.readFileSync(__dirname+'/config.json', encoding: 'utf8')
 
 
 
 # make sure to persist our logs.
 logger = (err) ->
-  console.error err
-  fs.appendFileSync('log.txt', '\n' + JSON.stringify(err, false, 2) + '\n' )
+  fs.appendFileSync(__dirname+'/log.txt', '\n' + JSON.stringify(err, false, 2) + '\n' )
 
 
 
@@ -18,8 +17,8 @@ logDate.setDate(logDate.getDate()+30)
 
 if Date.now() > logDate
   config.lastLogClean = Date.now()
-  fs.writeFileSync 'log.txt', ''
-  fs.writeFileSync 'config.json', JSON.stringify(config, false, 2)
+  fs.writeFileSync( __dirname+'/log.txt', '' )
+  fs.writeFileSync( __dirname+'/config.json', JSON.stringify(config, false, 2) )
   logger 'Cleaned logs on ' + config.lastLogClean
 
 
@@ -29,7 +28,7 @@ request 'http://icanhazip.com', (err, res, theIP) ->
   # handle any http error like a bad connection.
   if err
     logger err
-    process.exit()
+    return
 
   # regex checks that it's a standard IP address within normal range.
   IPRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -38,15 +37,15 @@ request 'http://icanhazip.com', (err, res, theIP) ->
   # make sure we got a proper IP response back.
   if IPRegex.test(theIP) == false
     logger 'icanhazip did not return a valid IP address.'
-    process.exit()
+    return
 
   # most likely scenario: the IP is the same so just kill the process.
   if theIP == config.currentIP
-    console.log 'IP is still the same.'
-    process.exit()
+    logger('IP is still the same at ' + Date.now())
+    return
 
   config.currentIP = theIP
-  fs.writeFileSync 'config.json', JSON.stringify(config, false, 2)
+  fs.writeFileSync( __dirname+'/config.json', JSON.stringify(config, false, 2) )
 
 
 
